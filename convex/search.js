@@ -10,18 +10,26 @@ export const vectorSearch = action({
   },
   handler: async (ctx, { queryEmbedding, topK = 20, minScore = 0 }) => {
     // Use Convex vector search API - only available in actions
-    const results = await ctx.vectorSearch("products", "byEmbedding", {
+    const vectorResults = await ctx.vectorSearch("products", "byEmbedding", {
       vector: queryEmbedding,
       limit: topK,
     });
 
-    // Filter by minimum score and return results
-    return results
-      .filter(r => r._score >= minScore)
-      .map(r => ({ 
-        ...r, 
-        score: r._score 
-      }));
+    // Filter by minimum score
+    const filtered = vectorResults.filter(r => r._score >= minScore);
+
+    // Fetch full product documents using the IDs
+    const productsWithScores = await Promise.all(
+      filtered.map(async (result) => {
+        const product = await ctx.runQuery(api.products.get, { id: result._id });
+        return {
+          ...product,
+          score: result._score,
+        };
+      })
+    );
+
+    return productsWithScores;
   },
 });
 
