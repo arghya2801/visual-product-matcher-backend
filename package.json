@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "node --watch server.js",
-    "start": "node server.js",
+    "start": "pnpm convex dev && node server.js",
     "seed": "node server.js seed"
   },
   "keywords": [],
