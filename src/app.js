@@ -6,6 +6,7 @@ import healthRouter from "./routes/health.route.js";
 import uploadRouter from "./routes/upload.route.js";
 import productsRouter from "./routes/products.route.js";
 import searchRouter from "./routes/search.route.js";
+import bulkUploadRouter from "./routes/bulk-upload.route.js";
 import { errorHandler } from "./middleware/error.middleware.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -24,6 +25,7 @@ export function createApp() {
   app.use("/api/upload", uploadRouter);
   app.use("/api/products", productsRouter);
   app.use("/api/search", searchRouter);
+  app.use("/api/bulk-upload", bulkUploadRouter);
 
   // Error handler
   app.use(errorHandler);

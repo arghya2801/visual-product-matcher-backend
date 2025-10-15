@@ -13,5 +13,5 @@ export async function bulkAddProducts(items) {
 }
 
 export async function vectorSearch(queryEmbedding, topK = 20, minScore = 0) {
-  return convex.query("search:vectorSearch", { queryEmbedding, topK, minScore });
+  return convex.action("search:vectorSearch", { queryEmbedding, topK, minScore });
 }

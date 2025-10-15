@@ -12,10 +12,11 @@ export default defineSchema({
       description: v.optional(v.string()),
       price: v.optional(v.number()),
       brand: v.optional(v.string()),
+      uploadedAt: v.optional(v.string()),
     })),
   }).vectorIndex("byEmbedding", {
     vectorField: "embedding",
-    dimensions: 1408, // Gemini text-embedding-004 dimension
+    dimensions: 768, // Gemini text-embedding model actual dimension
     filterFields: ["category"],
   }),
   

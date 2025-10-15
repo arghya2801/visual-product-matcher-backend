@@ -2,9 +2,9 @@ import axios from "axios";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { ConvexHttpClient } from "convex/browser";
 import { UTApi } from "uploadthing/server";
-import undici from "undici";
-const { File } = undici;
 import { GEMINI_API_KEY, CONVEX_DEPLOYMENT, UPLOADTHING_TOKEN } from "../config/index.js";
+
+// File is a global in Node.js 20+
 
 export const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 export const convex = new ConvexHttpClient(CONVEX_DEPLOYMENT);

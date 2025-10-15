@@ -1,23 +1,27 @@
-import { query, mutation } from "./_generated/server";
+import { query, mutation, action } from "./_generated/server";
 import { v } from "convex/values";
+import { api } from "./_generated/api";
 
-export const vectorSearch = query({
+export const vectorSearch = action({
   args: {
     queryEmbedding: v.array(v.float64()),
     topK: v.optional(v.number()),
     minScore: v.optional(v.number()),
   },
   handler: async (ctx, { queryEmbedding, topK = 20, minScore = 0 }) => {
-    // Use vector index if available
-    const results = await ctx.db
-      .query("products")
-      .withSearchIndex("byEmbedding", q => q.nearest("embedding", queryEmbedding))
-      .take(topK);
+    // Use Convex vector search API - only available in actions
+    const results = await ctx.vectorSearch("products", "byEmbedding", {
+      vector: queryEmbedding,
+      limit: topK,
+    });
 
-    // Convex returns _score for vector similarity (if available). If not, set 1.0
+    // Filter by minimum score and return results
     return results
-      .map(r => ({ ...r, score: r?._score ?? 1.0 }))
-      .filter(r => r.score >= minScore);
+      .filter(r => r._score >= minScore)
+      .map(r => ({ 
+        ...r, 
+        score: r._score 
+      }));
   },
 });
 

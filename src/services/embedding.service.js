@@ -2,13 +2,14 @@ import { genAI } from "../lib/clients.js";
 import axios from "axios";
 
 const VISION_MODEL = "gemini-2.0-flash";
-const EMBEDDING_MODEL = "text-embedding-004"; // 1408 dims
+const EMBEDDING_MODEL = "text-embedding-004"; // 768 dims
 
 export async function embedText(text) {
   try {
     const model = genAI.getGenerativeModel({ model: EMBEDDING_MODEL });
     const resp = await model.embedContent(text);
     const vec = resp?.embedding?.values || [];
+    console.log(`Embedding dimensions: ${vec.length}`); // Debug log
     return (vec || []).map(Number);
   } catch (e) {
     console.error("embedText error", e?.message || e);
